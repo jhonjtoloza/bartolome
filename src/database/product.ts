@@ -2,7 +2,7 @@ import { user } from '@/database/connection'
 import type { ObjectId } from 'mongodb'
 
 export type Product = {
-  _id: ObjectId
+  _id?: ObjectId
   code: string
   name: string
   price: number
@@ -11,4 +11,7 @@ export type Product = {
   stock: number
 }
 
-export const ProductCollection = user.mongoClient('mongodb-atlas').db('db').collection('products')
+export const ProductCollection = user
+  .mongoClient('mongodb-atlas')
+  .db('db')
+  .collection<Product & { _id: ObjectId }>('products')

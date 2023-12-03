@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 import AppTitle from '@/components/AppTitle.vue'
 import AppPicture from '@/components/AppPicture.vue'
 import QuantityInput from '@/components/invoicer/QuantityInput.vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { Product } from '@/database/product'
 import QuantityPriceInput from '@/views/purchases/QuantityPriceInput.vue'
 import { currencyFormat } from '@/util/currency-format'
@@ -113,7 +113,7 @@ const isValid = computed(() => {
             <div
               class="w-24 flex flex-shrink-0 flex-col items-center shadow border p-2 cursor-pointer"
               v-for="product in products"
-              :key="product._id.toString()"
+              :key="product._id!.toString()"
               @click="add(product)"
             >
               <app-picture :src="product.image" />
@@ -135,7 +135,7 @@ const isValid = computed(() => {
                 <th class="border px-4 py-2 text-right">Precio</th>
                 <th class="border px-4 py-2">Remover</th>
               </tr>
-              <tr v-for="(product, index) in purchase.products" :key="product._id.toString()">
+              <tr v-for="(product, index) in purchase.products" :key="product._id!.toString()">
                 <td class="border px-4 py-2">{{ product.quantity }}</td>
                 <td class="border px-4 py-2">{{ product.name }}</td>
                 <td class="border px-4 py-2 text-right">{{ currencyFormat(product.total) }}</td>

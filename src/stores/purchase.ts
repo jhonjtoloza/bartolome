@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Purchase, PurchaseProducto } from '@/database/purchase'
+import type { Purchase, PurchaseProduct } from '@/database/purchase'
 import { ref } from 'vue'
 import { PurchaseCollection } from '@/database/purchase'
 import { ProductCollection } from '@/database/product'
@@ -11,12 +11,12 @@ export const usePurchaseStore = defineStore('purchase', () => {
     purchase.value = model
   }
 
-  const addProduct = (model: PurchaseProducto) => {
+  const addProduct = (model: PurchaseProduct) => {
     if (!purchase.value) {
       return false
     }
     const product = purchase.value.products.find(
-      (product) => product._id.toString() === model._id.toString()
+      (product) => product._id!.toString() === model._id!.toString()
     )
     if (product) {
       return false

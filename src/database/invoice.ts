@@ -1,4 +1,3 @@
-import * as Realm from 'realm-web'
 import { user } from '@/database/connection'
 import type { Product } from '@/database/product'
 import type { ObjectId } from 'mongodb'

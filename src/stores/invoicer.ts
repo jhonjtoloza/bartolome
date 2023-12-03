@@ -32,11 +32,11 @@ export const useInvoicerStore = defineStore('invoicer', () => {
 
   const addProduct = async (invoice: Invoice, model: InvoiceProduct) => {
     const product = invoice.products.find(
-      (product) => product._id.toString() === model._id.toString()
+      (product) => product._id!.toString() === model._id!.toString()
     )
     if (product) {
       invoice.products.forEach((product) => {
-        if (product._id.toString() === model._id.toString()) {
+        if (product._id!.toString() === model._id!.toString()) {
           product.quantity += model.quantity
           product.total += model.total
         }

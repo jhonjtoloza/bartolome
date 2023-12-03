@@ -4,7 +4,7 @@ import { computed } from 'vue'
 const props = defineProps({
   modelValue: null,
   options: {
-    type: Array,
+    type: Array as () => { label: string; value: any }[],
     default: () => []
   },
   label: {

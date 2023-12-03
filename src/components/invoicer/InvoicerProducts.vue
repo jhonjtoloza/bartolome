@@ -2,7 +2,6 @@
 import { useProductStore } from '@/stores/product'
 import { storeToRefs } from 'pinia'
 import AppPicture from '@/components/AppPicture.vue'
-import { onMounted } from 'vue'
 import type { Product } from '@/database/product'
 import AppTitle from '@/components/AppTitle.vue'
 import { useInvoicerStore } from '@/stores/invoicer'
@@ -25,7 +24,7 @@ const onDragEnd = (product: Product) => {
         draggable="true"
         class="w-24 flex flex-shrink-0 flex-col items-center shadow border p-2 cursor-move"
         v-for="product in products"
-        :key="product._id.toString()"
+        :key="product._id!.toString()"
         @dragend="onDragEnd(product)"
       >
         <app-picture :src="product.image" />

@@ -4,12 +4,10 @@ import AppInput from '@/components/form/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
 import type { Product } from '@/database/product'
 import { useProductStore } from '@/stores/product'
-import { ObjectId } from '@/database/connection'
 
 const productStore = useProductStore()
 
 const model = ref<Product>({
-  _id: new ObjectId(),
   code: '',
   name: '',
   description: '',
@@ -23,7 +21,6 @@ const save = () => {
     .saveProduct(model.value)
     .then(() => {
       model.value = {
-        _id: new ObjectId(),
         code: '',
         name: '',
         description: '',

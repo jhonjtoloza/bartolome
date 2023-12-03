@@ -2,13 +2,13 @@ import type { Product } from '@/database/product'
 import { user } from '@/database/connection'
 import type { ObjectId } from 'mongodb'
 
-export type PurchaseProducto = Product & {
+export type PurchaseProduct = Product & {
   quantity: number
   total: number
 }
 export type Purchase = {
   date: Date
-  products: PurchaseProducto[]
+  products: PurchaseProduct[]
   total: number
   total_paid: number
 }

@@ -33,7 +33,7 @@ onMounted(() => {
           <th class="border-b px-4 py-2">Producto</th>
           <th class="border-b px-4 py-2 text-right">Precio</th>
         </tr>
-        <tr v-for="product in invoice.products" :key="product._id.toString()">
+        <tr v-for="product in invoice.products" :key="product._id!.toString()">
           <td class="border-b px-1 py-1">{{ product.quantity }}</td>
           <td class="border-b px-1 py-1">{{ product.name }}</td>
           <td class="border-b px-1 py-1 text-right">{{ currencyFormat(product.price) }}</td>

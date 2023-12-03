@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import IconClose from '@/components/icons/IconClose.vue'
-import AppTitle from '@/components/AppTitle.vue'
+
 const props = defineProps({
   title: String
 })

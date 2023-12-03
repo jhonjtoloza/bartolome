@@ -131,7 +131,7 @@ const isValid = computed(() => {
         <th class="border px-4 py-2">Producto</th>
         <th class="border px-4 py-2 text-right">Precio</th>
       </tr>
-      <tr v-for="product in invoice?.products" :key="product._id.toString()">
+      <tr v-for="product in invoice?.products" :key="product._id!.toString()">
         <td class="border px-4 py-2">{{ product.quantity }}</td>
         <td class="border px-4 py-2">{{ product.name }}</td>
         <td class="border px-4 py-2 text-right">{{ currencyFormat(product.price) }}</td>
