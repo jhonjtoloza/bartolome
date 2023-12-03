@@ -2,8 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Vue3Toastify from 'vue3-toastify'
 import type { ToastContainerOptions } from 'vue3-toastify'
+import Vue3Toastify from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import 'vue3-loading-overlay/dist/vue3-loading-overlay.css'
 
