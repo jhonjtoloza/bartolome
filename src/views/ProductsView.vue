@@ -52,7 +52,8 @@ const values = computed(() => {
       name: product.name,
       price: currencyFormat(product.price),
       description: product.description,
-      stock: product.stock
+      stock: product.stock,
+      raw: product
     }
   })
 })
@@ -75,7 +76,7 @@ const values = computed(() => {
         <app-picture :src="item.image" />
       </template>
       <template #cell(actions)="{ item }">
-        <app-button @click="edit(item as Product)">Editar</app-button>
+        <app-button @click="edit(item.raw as Product)">Editar</app-button>
       </template>
     </app-table>
   </app-card>

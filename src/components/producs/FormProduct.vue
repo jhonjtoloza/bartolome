@@ -4,6 +4,7 @@ import AppInput from '@/components/form/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
 import type { Product } from '@/database/product'
 import { useProductStore } from '@/stores/product'
+import { ObjectId } from '@/database/connection'
 
 const productStore = useProductStore()
 
