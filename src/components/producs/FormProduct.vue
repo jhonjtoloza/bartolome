@@ -12,6 +12,7 @@ const model = ref<Product>({
   code: '',
   name: '',
   description: '',
+  cost: 0,
   price: 0,
   stock: 0,
   image: ''
@@ -25,6 +26,7 @@ const save = () => {
         code: '',
         name: '',
         description: '',
+        cost: 0,
         price: 0,
         stock: 0,
         image: ''
@@ -47,6 +49,7 @@ defineExpose({
     <app-input label="Código" v-model="model.code" />
     <app-input label="Nombre" v-model="model.name" />
     <app-input label="Descripción" v-model="model.description" />
+    <app-input label="Precio costo" v-model.number="model.cost" />
     <app-input label="Precio" v-model.number="model.price" />
     <app-input label="Stock" v-model.number="model.stock" />
     <app-input label="Imagen" v-model="model.image" />

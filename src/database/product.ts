@@ -5,6 +5,7 @@ export type Product = {
   _id?: ObjectId
   code: string
   name: string
+  cost: number
   price: number
   description: string
   image: string

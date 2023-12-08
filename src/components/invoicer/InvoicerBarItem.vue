@@ -66,7 +66,7 @@ const finish = () => {
 
 <template>
   <div
-    class="w-full rounded-xl border-t border-cyan-500 overflow-hidden shadow-md my-4 p-3 flex items-center"
+    class="w-full rounded-xl border-t border-blue-800 overflow-hidden shadow-md my-4 p-3 flex items-center"
     :class="{
       'bg-zinc-100': seat.entered
     }"

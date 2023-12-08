@@ -42,7 +42,7 @@ defineExpose({
           <span class="sr-only">Close modal</span>
         </button>
         <div>
-          <div class="gap-2 flex items-stretch bg-purple-500 p-2" v-if="props.title">
+          <div class="gap-2 flex items-stretch bg-blue-800 p-2" v-if="props.title">
             <h5 class="ml-4 text-base font-semibold text-white uppercase dark:text-gray-400">
               {{ props.title }}
             </h5>

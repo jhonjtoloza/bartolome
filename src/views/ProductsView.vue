@@ -34,6 +34,7 @@ const fields = [
   { key: 'image', label: 'Imagen' },
   { key: 'code', label: 'Código' },
   { key: 'name', label: 'Nombre' },
+  { key: 'cost', label: 'Precio costo' },
   { key: 'price', label: 'Precio' },
   { key: 'description', label: 'Descripción' },
   { key: 'stock', label: 'Stock' },
@@ -50,6 +51,7 @@ const values = computed(() => {
       code: product.code,
       image: product.image,
       name: product.name,
+      cost: currencyFormat(product.cost),
       price: currencyFormat(product.price),
       description: product.description,
       stock: product.stock,
@@ -62,7 +64,7 @@ const values = computed(() => {
 <template>
   <app-card>
     <template #header>
-      <div class="p-4 gap-2 flex justify-between items-center bg-cyan-500">
+      <div class="p-4 gap-2 flex justify-between items-center bg-blue-800">
         <h5 class="text-base font-semibold text-zinc-100 uppercase dark:text-gray-100">
           Productos
         </h5>

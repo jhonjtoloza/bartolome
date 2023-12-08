@@ -56,13 +56,11 @@ const close = () => {
 <template>
   <app-card>
     <template #header>
-      <div class="p-4 gap-2 flex justify-between items-center bg-cyan-500">
+      <div class="p-4 gap-2 flex justify-between items-center bg-blue-800">
         <h5 class="text-base font-semibold text-zinc-100 uppercase dark:text-gray-100">
           Facturacion
         </h5>
-        <app-button @click="cashStore.closeSession()" class="bg-purple-500">
-          Cerrar caja
-        </app-button>
+        <app-button @click="cashStore.closeSession()" class="bg-blue-800"> Cerrar caja </app-button>
       </div>
     </template>
     <div class="grid grid-cols-6 gap-2">

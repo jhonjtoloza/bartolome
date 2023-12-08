@@ -64,13 +64,12 @@ const save = async () => {
       }
     )
   }
+  const printInvoice = { ...invoice.value }
   await cashStore.processInvoice(invoice.value!)
-  if (options.value.print) {
-    window.open(`${location.origin}/print/${invoice.value!._id}`)
-  }
-  modal.value.close()
-  await invoicerStore.loadInvoices()
   loader.hide()
+  await invoicerStore.loadInvoices()
+  modal.value.close()
+  invoicerStore.setPrintingInvoice(printInvoice)
 }
 
 const customer = ref<Customer>({
@@ -80,7 +79,6 @@ const customer = ref<Customer>({
 })
 
 const options = ref({
-  print: true,
   credit: false
 })
 
@@ -143,7 +141,6 @@ const isValid = computed(() => {
     </table>
 
     <div class="grid grid-cols-2 gap-2 py-3.5">
-      <app-checkbox v-model="options.print">Imprimir?</app-checkbox>
       <app-checkbox v-model="options.credit">Credito?</app-checkbox>
     </div>
     <app-input label="Abono" v-if="options.credit" v-model.number="invoice!.total_paid" />

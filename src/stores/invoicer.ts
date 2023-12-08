@@ -8,6 +8,7 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   const invoices = ref<Invoice[]>([])
   const product = ref<InvoiceProduct | null>(null)
   const invoice = ref<Invoice | null>(null)
+  const printingInvoice = ref<Invoice | null>(null)
   const loadInvoices = async () => {
     return await InvoiceCollection.find({ is_done: false }).then((data) => {
       invoices.value = data
@@ -94,10 +95,16 @@ export const useInvoicerStore = defineStore('invoicer', () => {
     return (await InvoiceCollection.count()) + 1
   }
 
+  const setPrintingInvoice = (model: Invoice | null) => {
+    console.log('setPrintingInvoice', model)
+    printingInvoice.value = model
+  }
+
   return {
     invoices,
     product,
     invoice,
+    printingInvoice,
     loadInvoices,
     addInvoice,
     addProduct,
@@ -105,6 +112,7 @@ export const useInvoicerStore = defineStore('invoicer', () => {
     setInvoice,
     updateInvoice,
     deleteInvoice,
-    getNextInvoiceNumber
+    getNextInvoiceNumber,
+    setPrintingInvoice
   }
 })

@@ -11,7 +11,7 @@ import AppIcon from '@/components/icons/AppIcon.vue'
 
 <template>
   <aside class="flex flex-row w-auto flex-shrink-0 pl-4 pr-2 py-4">
-    <div class="flex flex-col items-center py-4 flex-shrink-0 w-20 bg-cyan-500 rounded-3xl">
+    <div class="flex flex-col items-center py-4 flex-shrink-0 w-20 bg-blue-800 rounded-3xl">
       <side-menu to="/app">
         <app-icon />
       </side-menu>

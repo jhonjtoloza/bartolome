@@ -79,8 +79,8 @@ const onDragLeave = () => {
 }
 
 const finish = () => {
-  console.log(table.value)
   invoicerStore.setInvoice(table.value.invoice!)
+  invoicerStore.setPrintingInvoice(table.value.invoice!)
 }
 </script>
 

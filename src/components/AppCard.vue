@@ -7,7 +7,7 @@ const props = defineProps({
 <template>
   <div class="flex flex-col flex-1 m-4 shadow-xl rounded-3xl overflow-hidden">
     <slot name="header">
-      <div class="p-4 gap-2 flex justify-between items-center bg-cyan-500">
+      <div class="p-4 gap-2 flex justify-between items-center bg-blue-800">
         <h5 class="text-base font-semibold text-zinc-100 uppercase dark:text-gray-100">
           {{ props.title }}
         </h5>

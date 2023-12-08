@@ -192,7 +192,7 @@ onMounted(() => {
             </tfoot>
           </table>
           <hr class="border my-2.5" />
-          <h1 class="text-2xl text-purple-500">Hacer un abono</h1>
+          <h1 class="text-2xl text-blue-800">Hacer un abono</h1>
           <form class="" @submit.prevent="makeBillPayment">
             <app-input class="col-span-2" label="Monto" v-model.number="amount" />
             <div class="col-span-2 text-right mt-2.5">

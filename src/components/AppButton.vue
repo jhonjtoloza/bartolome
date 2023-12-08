@@ -2,7 +2,7 @@
 
 <template>
   <button
-    class="bg-cyan-500 text-white px-4 py-2 rounded-2xl shadow hover:shadow-2xl hover:bg-cyan-600 disabled:bg-cyan-800"
+    class="bg-blue-800 text-white px-4 py-2 rounded-2xl shadow hover:shadow-2xl hover:bg-blue-600 disabled:bg-blue-800"
   >
     <slot />
   </button>
