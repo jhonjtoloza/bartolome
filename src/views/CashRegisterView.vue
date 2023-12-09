@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { usePagination } from '@/util/pagination'
-import type { Cash } from '@/database/cash'
-import { CashCollection } from '@/database/cash'
+import { type Cash, CashModel } from '@/database/cash'
 import { computed, onMounted, ref } from 'vue'
 import { currencyFormat } from '@/util/currency-format'
 import { dateFormat } from '@/util/date-format'
@@ -11,7 +10,7 @@ import AppPagination from '@/components/AppPagination.vue'
 
 const { rows, page, setPage, totalPages, load } = usePagination<Cash>({
   rowsPerPage: ref(20),
-  collection: CashCollection
+  collection: CashModel.db
 })
 
 const fields = [

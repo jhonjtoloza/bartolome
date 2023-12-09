@@ -1,12 +1,33 @@
-import { user } from '@/database/connection'
-import type { ObjectId } from 'mongodb'
+import { getDb, ObjectId } from '@/database/connection'
 
 export type Table = {
-  _id: ObjectId
+  _id?: string
   name: string
 }
 
-export const TableCollection = user
-  .mongoClient('mongodb-atlas')
-  .db('db')
-  .collection<Table>('tables')
+const DB_NAME = 'tables'
+export const TableModel = {
+  db: getDb<Table>(DB_NAME),
+
+  async insertOne(table: Table) {
+    return this.db.put({
+      _id: table._id ?? ObjectId(),
+      ...table
+    })
+  },
+
+  async findAll() {
+    return this.db
+      .find({
+        selector: {},
+        sort: [
+          {
+            _id: 'asc'
+          }
+        ]
+      })
+      .then((data) => {
+        return data.docs
+      })
+  }
+}

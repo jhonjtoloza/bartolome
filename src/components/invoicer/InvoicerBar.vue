@@ -26,18 +26,18 @@ const save = () => {
   modal.value.close()
   const invoice: Invoice = {
     customer: {
-      _id: null,
       name: model.value.name,
       phone: model.value.phone
     },
     products: [],
     total: 0,
     total_paid: 0,
-    date: new Date(),
+    date: new Date().getTime(),
     is_done: false,
     location: 'bar',
     table: null,
-    number: 1
+    number: 1,
+    has_debt: false
   }
   invoicerStore.addInvoice(invoice)
   model.value = {

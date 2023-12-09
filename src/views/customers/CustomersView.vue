@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { Customer } from '@/database/customer'
-import { CustomerCollection } from '@/database/customer'
+import { CustomerModel } from '@/database/customer'
 import { usePagination } from '@/util/pagination'
 import AppInput from '@/components/form/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
@@ -12,28 +12,23 @@ import AppTable from '@/components/table/AppTable.vue'
 
 const pagination = usePagination<Customer>({
   rowsPerPage: ref(20),
-  collection: CustomerCollection
+  collection: CustomerModel.db
 })
 
 const filter = ref({
   name: '',
-  has_debt: undefined
+  has_debt: null
 })
 
 const onSubmit = () => {
   const _filter: { [key: string]: any } = {}
   if (filter.value.name) {
     _filter.name = {
-      $regex: new RegExp(filter.value.name, 'i')
+      $regex: `^.*${filter.value.name}.*$`
     }
   }
   if (filter.value.has_debt !== null) {
     _filter.has_debt = filter.value.has_debt
-  }
-  if (!filter.value.has_debt) {
-    _filter.has_debt = {
-      $in: [null, false]
-    }
   }
   pagination.filter.value = _filter
   pagination.load()

@@ -7,10 +7,10 @@ import AppButton from '@/components/AppButton.vue'
 import AppInput from '@/components/form/AppInput.vue'
 import AppAutocomplete from '@/components/form/AppAutocomplete.vue'
 import type { Customer } from '@/database/customer'
-import { CustomerCollection } from '@/database/customer'
+import { CustomerModel } from '@/database/customer'
 import { currencyFormat } from '@/util/currency-format'
 import AppCheckbox from '@/components/form/AppCheckbox.vue'
-import { ProductCollection } from '@/database/product'
+import { type Product, ProductModel } from '@/database/product'
 import { useCashStore } from '@/stores/cash'
 import { useLoading } from 'vue3-loading-overlay'
 
@@ -29,40 +29,29 @@ const save = async () => {
   loader.show()
   if (!customer.value._id) {
     customer.value._id = (
-      await CustomerCollection.insertOne({
+      await CustomerModel.insertOne({
         name: customer.value.name,
         phone: customer.value.phone
       })
-    ).insertedId
+    ).id
   }
   if (options.value.credit) {
-    CustomerCollection.updateOne(
-      {
-        _id: customer.value._id
-      },
-      {
-        $set: {
-          has_debt: true
-        }
-      }
-    )
+    CustomerModel.db.get<Customer>(customer.value._id!).then((dbCustomer) => {
+      dbCustomer.has_debt = true
+      return CustomerModel.db.put(dbCustomer)
+    })
   }
   invoice.value.number = await invoicerStore.getNextInvoiceNumber()
   invoice.value.customer = customer.value
   invoice.value.total_paid = !options.value.credit ? invoice.value.total : invoice.value.total_paid
   invoice.value.is_done = true
+  invoice.value.has_debt = invoice.value.total !== invoice.value.total_paid
   await invoicerStore.updateInvoice(invoice.value!)
   for (const product of invoice.value.products) {
-    await ProductCollection.updateOne(
-      {
-        _id: product._id
-      },
-      {
-        $inc: {
-          stock: -product.quantity
-        }
-      }
-    )
+    await ProductModel.db.get<Product>(product._id!).then((dbProduct) => {
+      dbProduct.stock -= product.quantity
+      return ProductModel.db.put(dbProduct)
+    })
   }
   const printInvoice = { ...invoice.value }
   await cashStore.processInvoice(invoice.value!)
@@ -73,7 +62,6 @@ const save = async () => {
 }
 
 const customer = ref<Customer>({
-  _id: null,
   name: '',
   phone: ''
 })
@@ -85,7 +73,6 @@ const options = ref({
 const setCustomer = (value: Customer | null) => {
   if (!value) {
     customer.value = {
-      _id: null,
       name: '',
       phone: ''
     }

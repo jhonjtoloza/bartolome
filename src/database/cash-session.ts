@@ -1,9 +1,8 @@
-import { user } from '@/database/connection'
-import type { ObjectId } from 'mongodb'
+import { getDb, ObjectId } from '@/database/connection'
 
 export type CashSession = {
-  _id?: ObjectId
-  user_id?: ObjectId
+  _id?: string
+  user_id?: string
   start: Date
   end: Date
   cash_opened: number // opening balance
@@ -16,7 +15,25 @@ export type CashSession = {
   status: 'open' | 'closed'
 }
 
-export const CashSessionCollection = user
-  .mongoClient('mongodb-atlas')
-  .db('db')
-  .collection<CashSession & { _id: ObjectId }>('cash-sessions')
+export const CashSessionModel = {
+  db: getDb('cash-sessions'),
+
+  async insertOrUpdate(session: CashSession) {
+    return this.db.put({
+      _id: session._id ?? ObjectId(),
+      ...session
+    })
+  },
+
+  async findOne(param: { status: string }): Promise<CashSession | null> {
+    return this.db
+      .find({
+        selector: {
+          ...param
+        }
+      })
+      .then((data) => {
+        return data.docs[1]
+      })
+  }
+}

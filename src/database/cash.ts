@@ -1,12 +1,31 @@
-import type { ObjectId } from 'mongodb'
-import { user } from '@/database/connection'
+import { getDb, ObjectId } from '@/database/connection'
 
 export type Cash = {
-  _id: ObjectId | null
+  _id?: string | null
   description: string
   amount: number
-  date: Date
+  date: number
   type: 'credit' | 'debit'
 }
 
-export const CashCollection = user.mongoClient('mongodb-atlas').db('db').collection<Cash>('cash')
+export const CashModel = {
+  db: getDb<Cash>('cash'),
+
+  async insertOrUpdate(cash: Cash) {
+    return this.db.put({
+      _id: cash._id ?? ObjectId(),
+      ...cash
+    })
+  },
+  findOne(param: { status: string }): Promise<Cash | null> {
+    return this.db
+      .find({
+        selector: {
+          ...param
+        }
+      })
+      .then((data) => {
+        return data.docs[1]
+      })
+  }
+}

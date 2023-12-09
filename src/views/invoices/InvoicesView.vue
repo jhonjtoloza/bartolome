@@ -2,7 +2,7 @@
 import { usePagination } from '@/util/pagination'
 import { computed, onMounted, ref } from 'vue'
 import type { Invoice } from '@/database/invoice'
-import { InvoiceCollection } from '@/database/invoice'
+import { InvoiceModel } from '@/database/invoice'
 import AppSelect from '@/components/form/AppSelect.vue'
 import AppInput from '@/components/form/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
@@ -14,7 +14,7 @@ import { dateFormat } from '@/util/date-format'
 
 const pagination = usePagination<Invoice>({
   rowsPerPage: ref(20),
-  collection: InvoiceCollection,
+  collection: InvoiceModel.db,
   filter: ref({
     is_done: true
   })

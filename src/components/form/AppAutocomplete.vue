@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import AppInput from '@/components/form/AppInput.vue'
 import type { Customer } from '@/database/customer'
-import { CustomerCollection } from '@/database/customer'
+import { CustomerModel } from '@/database/customer'
 import AppButton from '@/components/AppButton.vue'
 import IconClose from '@/components/icons/IconClose.vue'
 
@@ -23,9 +23,15 @@ const handleSearch = () => {
     options.value = []
     return
   }
-  CustomerCollection.find({ name: new RegExp(search.value, 'i') }).then((data: Customer[]) => {
-    options.value = data
-  })
+  CustomerModel.db
+    .find({
+      selector: {
+        name: RegExp(search.value)
+      }
+    })
+    .then((data) => {
+      options.value = data.docs as unknown as Customer[]
+    })
 }
 
 let timer: ReturnType<typeof setTimeout>

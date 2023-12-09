@@ -62,13 +62,13 @@ const router = createRouter({
           path: 'cash',
           name: 'cash',
           component: () => import('@/views/CashRegisterView.vue')
+        },
+        {
+          path: 'tables',
+          name: 'tables',
+          component: () => import('@/views/TablesView.vue')
         }
       ]
-    },
-    {
-      path: '/print/:id',
-      name: 'print',
-      component: () => import('../views/PrintInvoiceView.vue')
     },
     {
       path: '/login',

@@ -7,6 +7,7 @@ const formatter = new Intl.DateTimeFormat('es-ES', {
   hour12: true
 })
 
-export const dateFormat = (date: Date) => {
-  return formatter.format(date)
+export const dateFormat = (date: number) => {
+  const dateObj = new Date(date)
+  return formatter.format(dateObj)
 }

@@ -1,9 +1,10 @@
 import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
+import PouchDB from 'pouchdb'
 
 interface PaginationConfig<T> {
   rowsPerPage?: Ref<number>
-  collection: any
+  collection: PouchDB.Database<T | any>
   filter?: Ref
 }
 
@@ -23,45 +24,22 @@ export function usePagination<T>(config: PaginationConfig<T>) {
 
   const load = async () => {
     loading.value = true
-    const aggregation = []
-    if (filter.value) {
-      page.value = 1
-      aggregation.push({
-        $match: filter.value
+    const selector = Object.keys(filter.value).length ? filter.value : {}
+    console.log(`selector`, JSON.stringify(selector))
+    config.collection
+      .find({
+        selector,
+        skip: (page.value - 1) * rowsPerPage.value,
+        limit: rowsPerPage.value
       })
-    }
-    aggregation.push(
-      ...[
-        {
-          $skip: (page.value - 1) * rowsPerPage.value
-        },
-        {
-          $limit: rowsPerPage.value
-        },
-        {
-          $sort: {
-            date: -1
-          }
-        }
-      ]
-    )
-    config.collection.aggregate(aggregation).then((data: any) => {
-      loading.value = false
-      rows.value = data
-    })
+      .then((data) => {
+        console.log(`data`, data)
+        loading.value = false
+        rows.value = data.docs
+      })
   }
 
-  watch(
-    filter,
-    () => {
-      console.log(filter.value)
-      config.collection.count(filter.value).then((data: any) => {
-        console.log(`count: ${data}`)
-        total.value = data
-      })
-    },
-    { immediate: true }
-  )
+  watch(filter, () => {}, { immediate: true })
 
   const setPage = (pageNumber: number) => {
     page.value = pageNumber

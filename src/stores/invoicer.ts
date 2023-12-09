@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Invoice, InvoiceProduct } from '@/database/invoice'
-import { InvoiceCollection } from '@/database/invoice'
+import { InvoiceModel } from '@/database/invoice'
 import type { Product } from '@/database/product'
 
 export const useInvoicerStore = defineStore('invoicer', () => {
@@ -10,17 +10,26 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   const invoice = ref<Invoice | null>(null)
   const printingInvoice = ref<Invoice | null>(null)
   const loadInvoices = async () => {
-    return await InvoiceCollection.find({ is_done: false }).then((data) => {
-      invoices.value = data
-    })
+    console.log('loadInvoices')
+    await InvoiceModel.db.createIndex({ index: { fields: ['is_done'] } })
+    InvoiceModel.db
+      .find({
+        selector: {
+          is_done: false
+        }
+      })
+      .then((data) => {
+        console.log(data.docs)
+        invoices.value = data.docs as unknown as Invoice[]
+      })
   }
 
   const addInvoice = async (model: Invoice) => {
-    const { insertedId } = await InvoiceCollection.insertOne({
+    const { id } = await InvoiceModel.insertOne({
       ...model
     })
     await loadInvoices()
-    return await InvoiceCollection.findOne({ _id: insertedId })
+    return await InvoiceModel.findOne(id)
   }
 
   const total = (invoice: Invoice) => {
@@ -46,14 +55,7 @@ export const useInvoicerStore = defineStore('invoicer', () => {
       invoice.products.push(model)
     }
     invoice.total = total(invoice)
-    await InvoiceCollection.updateOne(
-      {
-        _id: invoice._id
-      },
-      {
-        $set: invoice
-      }
-    )
+    await InvoiceModel.insertOne(invoice)
 
     return invoice
   }
@@ -63,16 +65,7 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   }
 
   const updateInvoice = async (model: Invoice) => {
-    await InvoiceCollection.updateOne(
-      {
-        _id: model._id
-      },
-      {
-        $set: {
-          ...model
-        }
-      }
-    )
+    await InvoiceModel.insertOne(model)
     await loadInvoices()
   }
 
@@ -85,14 +78,12 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   }
 
   const deleteInvoice = async (model: Invoice) => {
-    await InvoiceCollection.deleteOne({
-      _id: model._id
-    })
+    await InvoiceModel.deleteOne(model)
     await loadInvoices()
   }
 
   const getNextInvoiceNumber = async (): Promise<number> => {
-    return (await InvoiceCollection.count()) + 1
+    return (await InvoiceModel.db.info()).doc_count + 1
   }
 
   const setPrintingInvoice = (model: Invoice | null) => {

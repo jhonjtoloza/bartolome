@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { TableCollection } from '@/database/table'
+import { TableModel } from '@/database/table'
 import type { Invoice } from '@/database/invoice'
 import { storeToRefs } from 'pinia'
 import InvoicerTable from '@/components/invoicer/InvoicerTable.vue'
@@ -15,12 +15,11 @@ const invoicerStore = useInvoicerStore()
 const { invoices } = storeToRefs(invoicerStore)
 
 const loadTables = async () => {
-  TableCollection.find({}).then((data) => {
-    tables.value = data.map((table) => ({
+  console.log(invoices.value)
+  TableModel.findAll().then((data) => {
+    tables.value = data.docs.map((table) => ({
       ...table,
-      invoice: invoices.value.find(
-        (invoice) => invoice.table?._id.toString() === table._id.toString()
-      ) as Invoice | null,
+      invoice: invoices.value.find((invoice) => invoice.table?._id === table._id) as Invoice | null,
       entered: false,
       used: false
     }))
@@ -40,7 +39,7 @@ watch(
   <app-title class="p-1 px-2"> Mesas</app-title>
   <div class="shadow-2xl rounded-br-3xl rounded-bl-3xl">
     <div class="grid grid-cols-3 gap-6 overflow-y-auto">
-      <invoicer-table :table="table" v-for="table in tables" :key="table._id.toString()" />
+      <invoicer-table :table="table" v-for="table in tables" :key="table._id" />
     </div>
   </div>
   <app-modal> hello</app-modal>

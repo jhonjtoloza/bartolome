@@ -43,6 +43,7 @@ const onDrop = () => {
               total: product.value.price * quantity
             }
           ],
+          has_debt: false,
           is_done: false,
           location: 'table',
           table: {
@@ -50,7 +51,7 @@ const onDrop = () => {
             name: table.value.name
           },
           customer: null,
-          date: new Date()
+          date: new Date().getTime()
         })
         .then((invoice) => {
           table.value.invoice = invoice
@@ -80,7 +81,6 @@ const onDragLeave = () => {
 
 const finish = () => {
   invoicerStore.setInvoice(table.value.invoice!)
-  invoicerStore.setPrintingInvoice(table.value.invoice!)
 }
 </script>
 

@@ -7,6 +7,7 @@ import IconUsers from '@/components/icons/IconUsers.vue'
 import IconShop from '@/components/icons/IconShop.vue'
 import IconCashRegister from '@/components/icons/IconCashRegister.vue'
 import AppIcon from '@/components/icons/AppIcon.vue'
+import IconTable from '@/components/icons/IconTable.vue'
 </script>
 
 <template>
@@ -33,6 +34,9 @@ import AppIcon from '@/components/icons/AppIcon.vue'
         </side-menu>
         <side-menu to="/app/purchases">
           <icon-shop class="fill-white" />
+        </side-menu>
+        <side-menu to="/app/tables">
+          <icon-table class="fill-white" />
         </side-menu>
         <!--        <side-menu to="/app/users">-->
         <!--          <icon-users class="fill-white" />-->

@@ -2,10 +2,10 @@
 import { useRoute, useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import type { Customer } from '@/database/customer'
-import { CustomerCollection } from '@/database/customer'
+import { CustomerModel } from '@/database/customer'
 import { ObjectId } from '@/database/connection'
 import type { Invoice } from '@/database/invoice'
-import { InvoiceCollection } from '@/database/invoice'
+import { InvoiceModel } from '@/database/invoice'
 import AppInput from '@/components/form/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
 import AppCard from '@/components/AppCard.vue'
@@ -24,6 +24,7 @@ const customer = ref<Customer>()
 const invoices = ref<Invoice[]>([])
 
 const setCustomer = (value: Customer | null) => {
+  console.log(value)
   if (!value) {
     useRouter().replace({ name: 'customers' })
   }
@@ -34,12 +35,17 @@ const setCustomer = (value: Customer | null) => {
 }
 
 const loadInvoices = async () => {
-  return InvoiceCollection.find({
-    $expr: {
-      $ne: ['$total_paid', '$total']
-    },
-    'customer._id': new ObjectId(id as string)
-  }).then(setInvoices)
+  InvoiceModel.db
+    .find({
+      selector: {
+        'customer._id': customer.value?._id,
+        has_debt: true
+      }
+    })
+    .then((data) => {
+      console.log(data)
+      invoices.value = data.docs
+    })
 }
 
 const total = computed(() => {
@@ -70,16 +76,11 @@ const makeBillPayment = async () => {
   for (const invoice of invoices.value) {
     const dept = Math.min(remaining, invoice.total - invoice.total_paid)
     remaining -= dept
-    await InvoiceCollection.updateOne(
-      {
-        _id: invoice._id
-      },
-      {
-        $set: {
-          total_paid: invoice.total_paid + dept
-        }
-      }
-    )
+    invoice.total_paid += dept
+    await InvoiceModel.db.put({
+      _id: invoice._id,
+      ...invoice
+    })
     if (remaining === 0) {
       loadInvoices().then(() => {
         checkDebt()
@@ -96,27 +97,15 @@ const makeBillPayment = async () => {
 
 const checkDebt = async () => {
   if (totalDebt.value === 0) {
-    await CustomerCollection.updateOne(
-      {
-        _id: customer.value?._id
-      },
-      {
-        $set: {
-          has_debt: false
-        }
-      }
-    )
+    await CustomerModel.insertOne({
+      ...customer.value,
+      has_debt: false
+    } as Customer)
   }
 }
 
-const setInvoices = (value: Invoice[]) => {
-  invoices.value = value
-}
-
 onMounted(() => {
-  CustomerCollection.findOne({
-    _id: new ObjectId(id as string)
-  }).then(setCustomer)
+  CustomerModel.findOne(id as string).then(setCustomer)
 })
 </script>
 

@@ -3,15 +3,15 @@ import { ref } from 'vue'
 import type { CashSession } from '@/database/cash-session'
 import type { Invoice } from '@/database/invoice'
 import type { Purchase } from '@/database/purchase'
-import { CashCollection } from '@/database/cash'
-import { CashSessionCollection } from '@/database/cash-session'
+import { CashModel } from '@/database/cash'
+import { CashSessionModel } from '@/database/cash-session'
 
 export const useCashStore = defineStore('cash', () => {
   const session = ref<CashSession>()
   const isChecked = ref(false)
 
   const loadSession = async () => {
-    const _session = await CashSessionCollection.findOne({ status: 'open' })
+    const _session = await CashSessionModel.findOne({ status: 'open' })
     console.log(_session)
     if (_session) {
       session.value = _session
@@ -24,14 +24,7 @@ export const useCashStore = defineStore('cash', () => {
 
   const persistSession = async () => {
     if (session.value) {
-      await CashSessionCollection.updateOne(
-        {
-          _id: session.value._id
-        },
-        {
-          $set: session.value
-        }
-      )
+      await CashSessionModel.insertOrUpdate(session.value)
     }
   }
 
@@ -48,16 +41,16 @@ export const useCashStore = defineStore('cash', () => {
       total_dept_paid: 0,
       status: 'open'
     }
-    await CashCollection.insertOne({
+    await CashModel.insertOrUpdate({
       description: 'Apertura Caja',
       amount: cash_opened,
-      date: new Date(),
+      date: new Date().getTime(),
       type: 'credit'
     })
-    const _ = await CashSessionCollection.insertOne(session.value)
+    const _ = await CashSessionModel.insertOrUpdate(session.value)
     session.value = {
       ...session.value,
-      _id: _.insertedId
+      _id: _.id
     }
   }
 
@@ -75,10 +68,10 @@ export const useCashStore = defineStore('cash', () => {
       session.value.cash_closed += invoice.total_paid
     }
 
-    await CashCollection.insertOne({
+    await CashModel.insertOrUpdate({
       description: 'Ingreso Venta N°' + invoice.number,
       amount: invoice.total_paid,
-      date: new Date(),
+      date: new Date().getTime(),
       type: 'credit'
     })
 
@@ -94,10 +87,10 @@ export const useCashStore = defineStore('cash', () => {
       console.log(session.value)
     }
 
-    await CashCollection.insertOne({
+    await CashModel.insertOrUpdate({
       description: 'Pago credito de: ' + customerName,
       amount: amount,
-      date: new Date(),
+      date: new Date().getTime(),
       type: 'credit'
     })
 
