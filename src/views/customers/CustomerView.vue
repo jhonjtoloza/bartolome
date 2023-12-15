@@ -97,7 +97,7 @@ const makeBillPayment = async () => {
 
 const checkDebt = async () => {
   if (totalDebt.value === 0) {
-    await CustomerModel.insertOne({
+    await CustomerModel.insertOrUpdate({
       ...customer.value,
       has_debt: false
     } as Customer)

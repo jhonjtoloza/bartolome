@@ -13,6 +13,7 @@
   ],
   "compilerOptions": {
     "declaration": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNext"
   }
 }

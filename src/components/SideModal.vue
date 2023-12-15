@@ -2,7 +2,11 @@
 import { ref } from 'vue'
 
 const props = defineProps({
-  title: String
+  title: String,
+  backdrop: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const opened = ref(false)
@@ -25,10 +29,14 @@ defineExpose({
 </script>
 
 <template>
-  <div class="backdrop-blur bg-gray-800/30 fixed inset-0 z-30" v-if="opened" @click="close" />
+  <div
+    class="backdrop-blur bg-gray-800/30 fixed inset-0 z-30"
+    v-if="opened && backdrop"
+    @click="close"
+  />
   <div
     v-if="opened"
-    class="fixed top-0 right-0 z-40 w-1/3 h-screen p-4 overflow-y-auto transition-transform bg-white dark:bg-gray-800"
+    class="fixed top-0 right-0 z-40 w-1/3 h-screen p-4 overflow-y-auto transition-transform bg-white dark:bg-gray-800 shadow-2xl"
     :class="[opened ? 'translate-x-0' : 'translate-x-full']"
   >
     <h5

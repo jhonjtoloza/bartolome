@@ -32,6 +32,8 @@ const save = () => {
     products: [],
     total: 0,
     total_paid: 0,
+    total_income: 0,
+    discount: 0,
     date: new Date().getTime(),
     is_done: false,
     location: 'bar',

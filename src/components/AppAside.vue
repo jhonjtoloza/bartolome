@@ -8,6 +8,7 @@ import IconShop from '@/components/icons/IconShop.vue'
 import IconCashRegister from '@/components/icons/IconCashRegister.vue'
 import AppIcon from '@/components/icons/AppIcon.vue'
 import IconTable from '@/components/icons/IconTable.vue'
+import IconUser from '@/components/icons/IconUser.vue'
 </script>
 
 <template>
@@ -38,9 +39,9 @@ import IconTable from '@/components/icons/IconTable.vue'
         <side-menu to="/app/tables">
           <icon-table class="fill-white" />
         </side-menu>
-        <!--        <side-menu to="/app/users">-->
-        <!--          <icon-users class="fill-white" />-->
-        <!--        </side-menu>-->
+        <side-menu to="/app/users">
+          <icon-user class="fill-white" />
+        </side-menu>
       </ul>
     </div>
   </aside>

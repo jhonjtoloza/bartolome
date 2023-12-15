@@ -36,16 +36,19 @@ const onDrop = () => {
           number: 1,
           total: product.value.price * quantity,
           total_paid: 0,
+          total_income: (product.value.price - product.value.cost) * quantity,
           products: [
             {
               ...product.value,
               quantity: quantity,
-              total: product.value.price * quantity
+              total: product.value.price * quantity,
+              income: (product.value.price - product.value.cost) * quantity
             }
           ],
           has_debt: false,
           is_done: false,
           location: 'table',
+          discount: 0,
           table: {
             _id: table.value._id,
             name: table.value.name
@@ -61,7 +64,8 @@ const onDrop = () => {
         .addProduct(table.value!.invoice, {
           ...product.value,
           quantity,
-          total: product.value.price * quantity
+          total: product.value.price * quantity,
+          income: (product.value.price - product.value.cost) * quantity
         })
         .then((invoice) => {
           table.value.invoice = invoice
@@ -85,7 +89,7 @@ const finish = () => {
 </script>
 
 <template>
-  <app-card>
+  <app-card body-class="p-0">
     <template #header>
       <div class="p-1 flex justify-center bg-zinc-200 rounded-tl rounded-tr">
         <h5 class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
@@ -114,9 +118,9 @@ const finish = () => {
         </template>
       </div>
       <template v-if="table.invoice">
-        <div class="absolute right-0.5 top-0.5">
-          <app-button class="bg-zinc-100" @click="finish">
-            <icon-invoice class="text-white" />
+        <div class="absolute right-1.5 top-1.5">
+          <app-button class="bg-blue-100" @click="finish">
+            <icon-invoice class="fill-amber-50" />
           </app-button>
         </div>
       </template>

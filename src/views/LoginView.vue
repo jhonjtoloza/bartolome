@@ -3,33 +3,39 @@ import AppInput from '@/components/form/AppInput.vue'
 import { ref } from 'vue'
 import AppButton from '@/components/AppButton.vue'
 import AppCard from '@/components/AppCard.vue'
-import { user } from '@/database/connection'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
+import { UserModel } from '@/database/user'
+import { useUserStore } from '@/stores/user'
 const router = useRouter()
-
+const userStore = useUserStore()
 const model = ref({
   username: '',
   password: ''
 })
 
 const onSubmit = async () => {
-  const collection = user.mongoClient('mongodb-atlas').db('db').collection('users')
-  const count = await collection.count()
+  const count = await UserModel.count()
   console.log({ count })
   if (!count) {
-    await collection.insertOne({
+    await UserModel.insertOrUpdate({
       username: model.value.username,
-      password: model.value.password
+      password: model.value.password,
+      role: 'admin'
     })
-    localStorage.setItem('user', model.value.username)
+    userStore.setUser({
+      username: model.value.username,
+      password: model.value.password,
+      role: 'admin'
+    })
     return await router.replace('/app')
   } else {
-    const exists = await collection.findOne({
+    const _user = await UserModel.findOne({
       username: model.value.username,
       password: model.value.password
     })
-    if (exists) {
+    if (_user) {
+      userStore.setUser(_user)
       return await router.replace('/app')
     }
   }

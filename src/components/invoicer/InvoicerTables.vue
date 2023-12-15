@@ -15,9 +15,8 @@ const invoicerStore = useInvoicerStore()
 const { invoices } = storeToRefs(invoicerStore)
 
 const loadTables = async () => {
-  console.log(invoices.value)
   TableModel.findAll().then((data) => {
-    tables.value = data.docs.map((table) => ({
+    tables.value = data.map((table) => ({
       ...table,
       invoice: invoices.value.find((invoice) => invoice.table?._id === table._id) as Invoice | null,
       entered: false,
@@ -38,7 +37,7 @@ watch(
 <template>
   <app-title class="p-1 px-2"> Mesas</app-title>
   <div class="shadow-2xl rounded-br-3xl rounded-bl-3xl">
-    <div class="grid grid-cols-3 gap-6 overflow-y-auto">
+    <div class="grid grid-cols-3 gap-1 overflow-y-auto">
       <invoicer-table :table="table" v-for="table in tables" :key="table._id" />
     </div>
   </div>

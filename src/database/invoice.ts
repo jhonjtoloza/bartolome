@@ -5,6 +5,7 @@ import { getDb, ObjectId } from '@/database/connection'
 export type InvoiceProduct = Product & {
   quantity: number
   total: number
+  income: number // total - price
 }
 
 export type Invoice = {
@@ -15,6 +16,8 @@ export type Invoice = {
   products: InvoiceProduct[]
   total: number
   total_paid: number
+  total_income: number
+  discount: number
   has_debt: boolean
   table?: {
     _id: string
@@ -22,13 +25,14 @@ export type Invoice = {
   } | null
   is_done: boolean
   location: 'table' | 'bar'
+  _rev?: string
 }
 
 const DB_NAME = 'invoices'
 export const InvoiceModel = {
   db: getDb<Invoice>(DB_NAME),
 
-  async insertOne(invoice: Invoice) {
+  async insertOrUpdate(invoice: Invoice) {
     return this.db.put({
       _id: invoice._id ?? ObjectId(),
       ...invoice

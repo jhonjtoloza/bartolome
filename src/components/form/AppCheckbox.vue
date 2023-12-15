@@ -18,17 +18,17 @@ const id = Math.random().toString(36).substring(2, 15)
 </script>
 
 <template>
-  <div class="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+  <div class="flex items-center pe-4 rounded-2xl">
+    <label :for="id" class="w-full py-2 ms-2 text-sm font-medium text-gray-900">
+      <slot />
+    </label>
     <input
       :id="id"
       type="checkbox"
       v-model="model"
       name="bordered-checkbox"
-      class="w-8 h-8 text-blue-600 bg-gray-100 border-gray-300 rounded accent-zinc-950 focus:ring-zinc-500 dark:focus:ring-zinc-600 dark:ring-offset-gray-800 focus:ring-5 dark:bg-gray-700 dark:border-gray-600"
+      class="w-6 h-6 text-blue-600 bg-blue-100 border-blue-300 rounded accent-blue-950 focus:ring-zinc-500 focus:ring-5"
     />
-    <label :for="id" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-      <slot />
-    </label>
   </div>
 </template>
 

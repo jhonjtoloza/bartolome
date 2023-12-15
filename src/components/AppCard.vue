@@ -1,6 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const props = defineProps({
-  title: String
+  title: String,
+  bodyClass: String
+})
+
+const padding = computed(() => {
+  if (props.bodyClass) {
+    return
+  }
+  return 'p-4'
 })
 </script>
 
@@ -13,7 +23,7 @@ const props = defineProps({
         </h5>
       </div>
     </slot>
-    <div class="p-8 gap-2 bg-white flex-1 overflow-y-scroll">
+    <div :class="[props.bodyClass, padding]" class="bg-white flex-1 overflow-y-scroll">
       <slot />
     </div>
   </div>

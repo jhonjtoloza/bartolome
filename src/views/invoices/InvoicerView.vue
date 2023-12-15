@@ -20,7 +20,7 @@ const productStore = useProductStore()
 const cashStore = useCashStore()
 
 const quantity = ref<InstanceType<typeof AppModal> | null>(null)
-const { product } = storeToRefs(invoicerStore)
+const { product, invoice } = storeToRefs(invoicerStore)
 
 const isOpen = computed(() => cashStore.session?.status === 'open')
 
@@ -54,7 +54,7 @@ const close = () => {
 </script>
 
 <template>
-  <app-card>
+  <app-card :flex="false" id="invoicer">
     <template #header>
       <div class="p-4 gap-2 flex justify-between items-center bg-blue-800">
         <h5 class="text-base font-semibold text-zinc-100 uppercase dark:text-gray-100">
@@ -63,15 +63,16 @@ const close = () => {
         <app-button @click="cashStore.closeSession()" class="bg-blue-800"> Cerrar caja </app-button>
       </div>
     </template>
-    <div class="grid grid-cols-6 gap-2">
-      <div class="col-span-6 min-h-[6em]">
+    <div class="grid grid-cols-12 gap-2">
+      <div :class="[invoice ? 'col-span-8' : 'col-span-2']">
         <invoicer-products />
       </div>
-      <div class="col-span-4">
+      <div class="col-span-6" v-if="!invoice">
         <invoicer-tables />
       </div>
-      <div class="col-span-2">
-        <invoicer-bar />
+      <div class="col-span-4">
+        <invoicer-bar v-if="!invoice" />
+        <invoicer-complete v-else />
       </div>
     </div>
     <template v-if="!isOpen">
@@ -83,5 +84,4 @@ const close = () => {
       </app-modal>
     </template>
   </app-card>
-  <invoicer-complete />
 </template>

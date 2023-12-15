@@ -22,22 +22,28 @@ const props = defineProps({
   },
   inputClass: {
     type: String
+  },
+  placeholder: {
+    type: String
   }
 })
 </script>
 
 <template>
-  <label :for="id">
-    <span class="font-medium text-slate-700 pb-2">{{ props.label }}</span>
-    <input
-      :id="id"
-      :type="props.type"
-      v-model="model"
-      :name="id"
-      :class="props.inputClass"
-      class="w-full py-2 border border-slate-200 px-2 focus:outline-none focus:border-slate-500 hover:shadow"
-    />
-  </label>
+  <div>
+    <label :for="id">
+      <span class="font-medium text-slate-700 pb-2">{{ props.label }}</span>
+      <input
+        :id="id"
+        :type="props.type"
+        v-model="model"
+        :name="id"
+        :class="props.inputClass"
+        :placeholder="props.placeholder"
+        class="w-full bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none py-1 border border-slate-300"
+      />
+    </label>
+  </div>
 </template>
 
 <style scoped></style>

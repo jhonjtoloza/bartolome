@@ -16,7 +16,7 @@ export const TableModel = {
     })
   },
 
-  async findAll() {
+  async findAll(): Promise<Table[]> {
     return this.db
       .find({
         selector: {},

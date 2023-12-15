@@ -25,39 +25,83 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   }
 
   const addInvoice = async (model: Invoice) => {
-    const { id } = await InvoiceModel.insertOne({
+    const { id } = await InvoiceModel.insertOrUpdate({
       ...model
     })
     await loadInvoices()
     return await InvoiceModel.findOne(id)
   }
 
-  const total = (invoice: Invoice) => {
-    let total = 0
-    invoice.products.forEach((product) => {
-      total += product.total
-    })
-    return total
+  const updateTotal = (invoice: Invoice) => {
+    const total = (invoice: Invoice) => {
+      let total = 0
+      invoice.products.forEach((product) => {
+        total += product.total
+      })
+      invoice.total = total
+    }
+
+    const income = (invoice: Invoice) => {
+      let income = 0
+      invoice.products.forEach((product) => {
+        income += product.income
+      })
+      invoice.total_income = income - invoice.discount
+    }
+    total(invoice)
+    income(invoice)
   }
 
-  const addProduct = async (invoice: Invoice, model: InvoiceProduct) => {
-    const product = invoice.products.find(
+  const addProduct = async (_invoice: Invoice, model: InvoiceProduct) => {
+    const product = _invoice.products.find(
       (product) => product._id!.toString() === model._id!.toString()
     )
     if (product) {
-      invoice.products.forEach((product) => {
+      _invoice.products.forEach((product) => {
         if (product._id!.toString() === model._id!.toString()) {
           product.quantity += model.quantity
           product.total += model.total
+          product.income += model.income
         }
       })
     } else {
-      invoice.products.push(model)
+      _invoice.products.push(model)
     }
-    invoice.total = total(invoice)
-    await InvoiceModel.insertOne(invoice)
+    updateTotal(_invoice)
+    const response = await InvoiceModel.insertOrUpdate(_invoice)
+    if (invoice.value && invoice.value?._id! === _invoice._id) {
+      invoice.value = { ...invoice.value, _rev: response.rev }
+    }
+    await loadInvoices()
+    return _invoice
+  }
 
-    return invoice
+  const deleteProduct = async (model: InvoiceProduct) => {
+    if (!invoice.value) {
+      return false
+    }
+    invoice.value.products = invoice.value.products.filter((product) => product._id !== model._id)
+    updateTotal(invoice.value)
+    const response = await InvoiceModel.insertOrUpdate(invoice.value)
+    invoice.value = { ...invoice.value, _rev: response.rev }
+    await loadInvoices()
+  }
+
+  const updateProduct = async (model: InvoiceProduct) => {
+    if (!invoice.value) {
+      return false
+    }
+    invoice.value.products.forEach((product) => {
+      if (product._id!.toString() === model._id!.toString()) {
+        product.quantity = model.quantity
+        product.total = model.total
+        product.income = model.income
+      }
+    })
+    updateTotal(invoice.value)
+    const response = await InvoiceModel.insertOrUpdate(invoice.value)
+    invoice.value = { ...invoice.value, _rev: response.rev }
+    await loadInvoices()
   }
 
   const setInvoice = (model: Invoice | null) => {
@@ -65,15 +109,19 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   }
 
   const updateInvoice = async (model: Invoice) => {
-    await InvoiceModel.insertOne(model)
+    const response = await InvoiceModel.insertOrUpdate(model)
+    if (invoice.value && invoice.value?._id! === model._id) {
+      invoice.value = { ...invoice.value, _rev: response.rev }
+    }
     await loadInvoices()
   }
 
-  const setDragging = (model: Product) => {
+  const setDragging = async (model: Product) => {
     product.value = {
       ...model,
       quantity: 1,
-      total: model.price
+      total: model.price,
+      income: model.price - model.price
     }
   }
 
@@ -99,6 +147,8 @@ export const useInvoicerStore = defineStore('invoicer', () => {
     loadInvoices,
     addInvoice,
     addProduct,
+    updateProduct,
+    deleteProduct,
     setDragging,
     setInvoice,
     updateInvoice,
