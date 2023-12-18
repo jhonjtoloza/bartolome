@@ -3,7 +3,8 @@ import PouchDBFind from 'pouchdb-find'
 
 PouchDB.plugin(PouchDBFind)
 
-const DB_HOST = `http://bartolome:BarTolome5984@167.99.116.92:5984`
+// const DB_HOST = `http://bartolome:BarTolome5984@167.99.116.92:5984`
+const DB_HOST = `https://bartolome:BarTolome5984@jhondev.online`
 export const getDb = <T>(name: string) => {
   const localDB = new PouchDB(name)
   const remoteDB = new PouchDB(`${DB_HOST}/${name}`)
