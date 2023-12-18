@@ -17,10 +17,10 @@ const { invoices } = storeToRefs(invoicerStore)
 const loadTables = async () => {
   TableModel.findAll().then((data) => {
     tables.value = data.map((table) => ({
-      ...table,
       invoice: invoices.value.find((invoice) => invoice.table?._id === table._id) as Invoice | null,
       entered: false,
-      used: false
+      used: false,
+      ...table
     }))
   })
 }

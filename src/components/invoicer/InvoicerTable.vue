@@ -50,7 +50,7 @@ const onDrop = () => {
           location: 'table',
           discount: 0,
           table: {
-            _id: table.value._id,
+            _id: table.value._id!,
             name: table.value.name
           },
           customer: null,

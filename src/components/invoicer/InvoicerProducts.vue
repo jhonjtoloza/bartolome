@@ -8,6 +8,7 @@ import { useInvoicerStore } from '@/stores/invoicer'
 import { currencyFormat } from '@/util/currency-format'
 import { computed, onMounted, ref } from 'vue'
 import AppInput from '@/components/form/AppInput.vue'
+import type { InvoiceProduct } from '@/database/invoice'
 
 const productStore = useProductStore()
 const invoicerStore = useInvoicerStore()
@@ -23,10 +24,11 @@ const addProduct = async (model: Product) => {
   if (!invoice.value) {
     return
   }
-  const product = {
+  const product: InvoiceProduct = {
     ...model,
     quantity: 1,
-    total: model.price
+    total: model.price,
+    income: model.price - model.cost
   }
   await invoicerStore.addProduct(invoice.value, product)
 }
