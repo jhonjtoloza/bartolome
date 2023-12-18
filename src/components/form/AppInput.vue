@@ -25,6 +25,9 @@ const props = defineProps({
   },
   placeholder: {
     type: String
+  },
+  disabled: {
+    type: Boolean
   }
 })
 </script>
@@ -40,7 +43,8 @@ const props = defineProps({
         :name="id"
         :class="props.inputClass"
         :placeholder="props.placeholder"
-        class="w-full bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none py-1 border border-slate-300"
+        :disabled="props.disabled"
+        class="h-8 w-full bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none py-1 border border-slate-300 disabled:bg-gray-200"
       />
     </label>
   </div>

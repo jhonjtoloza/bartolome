@@ -25,7 +25,7 @@ const handleSearch = () => {
     .find({
       selector: {
         name: {
-          $regex: '.*' + search.value + '.*'
+          $regex: `.*[${search.value.toUpperCase()}|${search.value.toLowerCase()}].*`
         }
       }
     })
@@ -92,6 +92,7 @@ defineExpose({
         </svg>
       </div>
       <app-input
+        :disabled="!!selected"
         label="Cliente"
         class="flex-1"
         v-model="search"

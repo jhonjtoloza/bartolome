@@ -50,18 +50,26 @@ onMounted(() => {
 
 const fields = [
   { key: 'date', label: 'Fecha' },
+  { key: 'number', label: 'Número' },
   { key: 'customer', label: 'Cliente' },
-  { key: 'total', label: 'Total' },
-  { key: 'has_debt', label: 'Deuda' },
+  { key: 'total', label: 'Total', td_classes: 'text-right' },
+  { key: 'discount', label: 'Descuento', td_classes: 'text-right' },
+  { key: 'total_paid', label: 'Pagado', td_classes: 'text-right' },
+  { key: 'income', label: 'Ganancia', td_classes: 'text-right' },
+  { key: 'debt', label: 'Deuda', td_classes: 'text-right' },
   { key: 'actions', label: 'Acciones' }
 ]
 const tableValues = computed(() => {
   return rows.value.map((row) => ({
-    id: row._id!.toString(),
+    _id: row._id,
+    number: row.number,
     date: dateFormat(row.date),
     customer: row.customer!.name,
     total: currencyFormat(row.total),
-    has_debt: row.total > row.total_paid ? 'Si' : 'No',
+    discount: currencyFormat(row.discount),
+    total_paid: currencyFormat(row.total_paid),
+    income: currencyFormat(row.total_income),
+    debt: currencyFormat(row.total - row.discount - row.total_paid),
     actions: ''
   }))
 })
@@ -72,7 +80,11 @@ const { rows, totalPages, page, setPage } = pagination
 <template>
   <app-card title="Facturas">
     <form class="grid grid-cols-6 items-end gap-2 my-2" @submit.prevent="onSubmit">
-      <app-input class="col-span-2" label="Buscar por nombre" v-model="filter.customer" />
+      <app-input
+        class="col-span-2"
+        label="Buscar por nombre de cliente"
+        v-model="filter.customer"
+      />
       <app-select
         label="Credito"
         class="col-span-2"
@@ -89,7 +101,7 @@ const { rows, totalPages, page, setPage } = pagination
     </form>
     <app-table :fields="fields" :rows="tableValues">
       <template #cell(actions)="{ item }">
-        <router-link :to="`/invoices/${item._id}`">
+        <router-link :to="`/app/invoices/${item._id}`">
           <app-button>Ver</app-button>
         </router-link>
       </template>

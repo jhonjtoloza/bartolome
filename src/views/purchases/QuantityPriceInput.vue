@@ -3,13 +3,15 @@ import AppButton from '@/components/AppButton.vue'
 import { ref } from 'vue'
 import AppModal from '@/components/AppModal.vue'
 import AppInput from '@/components/form/AppInput.vue'
+import type { Product } from '@/database/product'
 
 const quantity = ref(1)
 const price = ref(0)
 
 const modal = ref()
 let reqCallback: Function | null = null
-const requestQuantity = (callback: Function) => {
+const requestQuantity = (callback: Function, product: Product) => {
+  price.value = product.cost
   reqCallback = callback
   modal.value.open()
 }

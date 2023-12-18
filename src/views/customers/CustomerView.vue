@@ -15,7 +15,6 @@ import { useCashStore } from '@/stores/cash'
 import { dateFormat } from '@/util/date-format'
 import { currencyFormat } from '@/util/currency-format'
 
-const loader = useLoading()
 const cashStore = useCashStore()
 
 const { id } = useRoute().params
@@ -71,7 +70,6 @@ const totalDebt = computed(() => {
 const amount = ref(0)
 
 const makeBillPayment = async () => {
-  loader.show()
   let remaining = amount.value
   for (const invoice of invoices.value) {
     const dept = Math.min(remaining, invoice.total - invoice.total_paid)
@@ -92,7 +90,6 @@ const makeBillPayment = async () => {
   await cashStore.processBillPayment(amount.value, customer.value!.name)
 
   amount.value = 0
-  loader.hide()
 }
 
 const checkDebt = async () => {

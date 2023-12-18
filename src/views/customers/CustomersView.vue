@@ -24,7 +24,7 @@ const onSubmit = () => {
   const _filter: { [key: string]: any } = {}
   if (filter.value.name) {
     _filter.name = {
-      $regex: `^.*${filter.value.name}.*$`
+      $regex: `.*[${filter.value.name.toLowerCase()}|${filter.value.name.toUpperCase()}}].*$`
     }
   }
   if (filter.value.has_debt !== null) {

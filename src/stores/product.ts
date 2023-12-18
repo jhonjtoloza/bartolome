@@ -13,7 +13,7 @@ export const useProductStore = defineStore('product', () => {
   }
 
   const saveProduct = async (model: Product) => {
-    await ProductModel.insertOne(model)
+    await ProductModel.insertOrUpdate(model)
 
     await loadProducts()
   }

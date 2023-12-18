@@ -4,6 +4,7 @@ import { computed, toRefs } from 'vue'
 type TableField = {
   key: String
   label: String
+  td_classes?: string
 }
 
 type TableRow = {
@@ -36,7 +37,9 @@ const { fields, rows } = toRefs(props)
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border"
         >
           <tr>
-            <th scope="col" class="px-6 py-3" v-for="column in fields">{{ column.label }}</th>
+            <th scope="col" class="px-6 py-3" v-for="column in fields" :class="column?.td_classes">
+              {{ column.label }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -45,7 +48,11 @@ const { fields, rows } = toRefs(props)
             v-for="item in rows"
             :key="item.id"
           >
-            <td class="px-6 py-4" v-for="key in displayedFieldKeys">
+            <td
+              class="px-6 py-4"
+              v-for="key in displayedFieldKeys"
+              :class="fields.find((field) => field.key === key)?.td_classes"
+            >
               <slot :name="`cell(${key})`" :value="item[key as any]" :item="item">
                 {{ item[key as any] }}
               </slot>

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import type { Purchase, PurchaseProduct } from '@/database/purchase'
 import { ref } from 'vue'
-import { PurchaseCollection } from '@/database/purchase'
-import { ProductCollection } from '@/database/product'
+import { PurchaseModel } from '@/database/purchase'
+import { ProductModel } from '@/database/product'
 
 export const usePurchaseStore = defineStore('purchase', () => {
   const purchase = ref<Purchase>()
@@ -56,19 +56,17 @@ export const usePurchaseStore = defineStore('purchase', () => {
     }
 
     for (const product of purchase.value.products) {
-      await ProductCollection.updateOne(
-        {
-          _id: product._id
-        },
-        {
-          $inc: {
-            stock: product.quantity
-          }
+      await ProductModel.findOne(product._id!).then(async (model) => {
+        if (model) {
+          product.price = model.price
+          product.stock += product.quantity
+
+          await ProductModel.insertOrUpdate(product)
         }
-      )
+      })
     }
 
-    return await PurchaseCollection.insertOne({
+    return await PurchaseModel.insertOrUpdate({
       ...purchase.value
     })
   }

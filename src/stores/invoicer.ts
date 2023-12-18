@@ -10,7 +10,6 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   const invoice = ref<Invoice | null>(null)
   const printingInvoice = ref<Invoice | null>(null)
   const loadInvoices = async () => {
-    console.log('loadInvoices')
     await InvoiceModel.db.createIndex({ index: { fields: ['is_done'] } })
     InvoiceModel.db
       .find({
@@ -19,7 +18,6 @@ export const useInvoicerStore = defineStore('invoicer', () => {
         }
       })
       .then((data) => {
-        console.log(data.docs)
         invoices.value = data.docs as unknown as Invoice[]
       })
   }

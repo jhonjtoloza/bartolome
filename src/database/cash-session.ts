@@ -1,10 +1,11 @@
 import { getDb, ObjectId } from '@/database/connection'
+import type { User } from '@/database/user'
 
 export type CashSession = {
   _id?: string
-  user_id?: string
-  start: Date
-  end: Date
+  user: string
+  start: number
+  end: number
   cash_opened: number // opening balance
   cash_closed: number // closing balance
   total_debt: number // total debt from invoices pending
@@ -12,6 +13,8 @@ export type CashSession = {
   total_invoices: number // total invoices
   total_purchases: number // total purchases
   total_dept_paid: number
+  total_discount: number // total discount
+  total_income: number
   status: 'open' | 'closed'
 }
 
@@ -26,6 +29,11 @@ export const CashSessionModel = {
   },
 
   async findOne(param: { status: string }): Promise<CashSession | null> {
+    await this.db.createIndex({
+      index: {
+        fields: Object.keys(param)
+      }
+    })
     return this.db
       .find({
         selector: {
@@ -33,7 +41,7 @@ export const CashSessionModel = {
         }
       })
       .then((data) => {
-        return data.docs[1]
+        return data.docs[0]
       })
   }
 }

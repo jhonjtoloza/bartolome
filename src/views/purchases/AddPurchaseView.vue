@@ -14,21 +14,21 @@ import AppButton from '@/components/AppButton.vue'
 import IconClose from '@/components/icons/IconClose.vue'
 import { toast } from 'vue3-toastify'
 import { useLoading } from 'vue3-loading-overlay'
-import { CashCollection } from '@/database/cash'
+import { CashModel } from '@/database/cash'
+import { useCashStore } from '@/stores/cash'
 
 const purchaseStore = usePurchaseStore()
 const productStore = useProductStore()
-const loader = useLoading()
+const cashStore = useCashStore()
 
 productStore.loadProducts()
 
 const { products } = storeToRefs(productStore)
 const { purchase } = storeToRefs(purchaseStore)
 
-const quantityInput = ref<InstanceType<typeof QuantityInput>>()
+const quantityInput = ref<InstanceType<typeof QuantityPriceInput>>()
 
 const add = async (product: Product) => {
-  console.log('add', product)
   const onResponse = (quantity: number, price: number) => {
     if (!quantity || !price) {
       toast('precio y cantidad deben ser mas que cero', {
@@ -42,7 +42,7 @@ const add = async (product: Product) => {
       purchaseStore.addPurchase({
         total: price * quantity,
         total_paid: 0,
-        date: new Date(),
+        date: new Date().getTime(),
         products: [
           {
             ...product,
@@ -66,30 +66,21 @@ const add = async (product: Product) => {
       }
     }
   }
-  console.log(quantityInput)
-  quantityInput.value?.requestQuantity(onResponse)
+  quantityInput.value?.requestQuantity(onResponse, product)
 }
-
-const model = computed({
-  get: () => purchase.value,
-  set: (value: any) => {
-    purchaseStore.updatePurchase(value)
-  }
-})
 
 const save = async () => {
   if (!purchase.value) {
     return
   }
-  loader.show()
   await purchaseStore.savePurchase()
-  await CashCollection.insertOne({
-    date: new Date(),
+  await CashModel.insertOrUpdate({
+    date: new Date().getTime(),
     description: `Compra registrada`,
     amount: purchase.value.total * -1,
     type: 'debit'
   })
-  loader.hide()
+  await cashStore.processPurchase(purchase.value)
   toast('Guardado con exito', {
     autoClose: 3000
   })
@@ -108,10 +99,10 @@ const isValid = computed(() => {
         <app-title class="p-1 mb-1">Productos</app-title>
         <div class="pb-0">
           <div
-            class="p-4 flex gap-3 overflow-x-auto space-x-1 shadow-xl rounded-bl-3xl rounded-br-3xl"
+            class="p-4 gap-3 flex flex-wrap overflow-x-auto space-x-1 shadow-xl rounded-bl-3xl rounded-br-3xl"
           >
             <div
-              class="w-24 flex flex-shrink-0 flex-col items-center shadow border p-2 cursor-pointer"
+              class="w-24 items-center shadow border p-2 cursor-pointer"
               v-for="product in products"
               :key="product._id!.toString()"
               @click="add(product)"

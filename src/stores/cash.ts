@@ -5,9 +5,10 @@ import type { Invoice } from '@/database/invoice'
 import type { Purchase } from '@/database/purchase'
 import { CashModel } from '@/database/cash'
 import { CashSessionModel } from '@/database/cash-session'
+import { useUserStore } from '@/stores/user'
 
 export const useCashStore = defineStore('cash', () => {
-  const session = ref<CashSession>()
+  const session = ref<CashSession | null>(null)
   const isChecked = ref(false)
 
   const loadSession = async () => {
@@ -29,9 +30,12 @@ export const useCashStore = defineStore('cash', () => {
   }
 
   const openSession = async (cash_opened: number) => {
+    const { user } = useUserStore()
+
     session.value = {
-      start: new Date(),
-      end: new Date(),
+      user: user!.username,
+      start: new Date().getTime(),
+      end: new Date().getTime(),
       cash_opened,
       cash_closed: cash_opened,
       total_debt: 0,
@@ -39,6 +43,8 @@ export const useCashStore = defineStore('cash', () => {
       total_invoices: 0,
       total_purchases: 0,
       total_dept_paid: 0,
+      total_discount: 0,
+      total_income: 0,
       status: 'open'
     }
     await CashModel.insertOrUpdate({
@@ -54,18 +60,21 @@ export const useCashStore = defineStore('cash', () => {
     }
   }
 
-  const closeSession = () => {
-    session.value!.end = new Date()
+  const closeSession = async () => {
+    session.value!.end = new Date().getTime()
     session.value!.status = 'closed'
-    session.value = undefined
+    await CashSessionModel.insertOrUpdate(session.value!)
+    session.value = null
   }
 
   const processInvoice = async (invoice: Invoice) => {
     if (session.value) {
-      session.value.total_debt += invoice.total - invoice.total_paid
+      session.value.total_debt += invoice.total - invoice.discount - invoice.total_paid
       session.value.total_invoices += invoice.total
       session.value.total_paid += invoice.total_paid
       session.value.cash_closed += invoice.total_paid
+      session.value.total_discount += invoice.discount
+      session.value.total_income += invoice.total_income
     }
 
     await CashModel.insertOrUpdate({
@@ -97,11 +106,12 @@ export const useCashStore = defineStore('cash', () => {
     await persistSession()
   }
 
-  const processPurchase = (purchase: Purchase) => {
+  const processPurchase = async (purchase: Purchase) => {
     if (session.value) {
       session.value.total_purchases -= purchase.total
       session.value.total_paid -= purchase.total_paid
       session.value.cash_closed -= purchase.total_paid
+      await persistSession()
     }
   }
 

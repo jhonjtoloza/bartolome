@@ -88,7 +88,7 @@ const router = createRouter({
         },
         {
           path: 'purchases/:id',
-          name: 'purchases.edit',
+          name: 'purchases.view',
           meta: {
             requiresAuth: true,
             roles: ['admin']
@@ -103,6 +103,24 @@ const router = createRouter({
             roles: ['admin']
           },
           component: () => import('@/views/CashRegisterView.vue')
+        },
+        {
+          path: 'cash-session',
+          name: 'cash-session',
+          meta: {
+            requiresAuth: true,
+            roles: ['admin']
+          },
+          component: () => import('@/views/CashSessionsView.vue')
+        },
+        {
+          path: 'cash-session/:id',
+          name: 'cash-session.view',
+          meta: {
+            requiresAuth: true,
+            roles: ['admin']
+          },
+          component: () => import('@/views/CashSessionView.vue')
         },
         {
           path: 'tables',

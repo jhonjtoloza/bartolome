@@ -38,19 +38,6 @@ const modal = ref<InstanceType<typeof AppModal> | null>(null)
 const openCash = () => {
   cashStore.openSession(amount.value)
 }
-
-onMounted(async () => {
-  if (!cashStore.isChecked) {
-    await cashStore.loadSession()
-  }
-  if (!isOpen.value) {
-    modal.value?.open()
-  }
-})
-
-const close = () => {
-  modal.value!.open()
-}
 </script>
 
 <template>
@@ -60,10 +47,13 @@ const close = () => {
         <h5 class="text-base font-semibold text-zinc-100 uppercase dark:text-gray-100">
           Facturacion
         </h5>
-        <app-button @click="cashStore.closeSession()" class="bg-blue-800"> Cerrar caja </app-button>
+        <app-button class="bg-blue-600" @click="cashStore.closeSession()" v-if="isOpen">
+          Cerrar caja
+        </app-button>
+        <app-button @click="modal?.open()" class="bg-blue-600" v-else> Abrir caja </app-button>
       </div>
     </template>
-    <div class="grid grid-cols-12 gap-2">
+    <div class="grid grid-cols-12 gap-2" :class="{ 'pointer-events-none blur-sm': !isOpen }">
       <div :class="[invoice ? 'col-span-8' : 'col-span-2']">
         <invoicer-products />
       </div>
@@ -76,7 +66,7 @@ const close = () => {
       </div>
     </div>
     <template v-if="!isOpen">
-      <app-modal ref="modal" title="Debe abrir caja" v-if="!isOpen" @close="close">
+      <app-modal ref="modal" title="Debe abrir caja" v-if="!isOpen">
         <app-input type="number" label="Ingrese un monto" v-model="amount" />
         <div class="mt-3 text-right">
           <app-button @click="openCash">Confirmar</app-button>

@@ -1,6 +1,7 @@
 import { getDb } from '@/database/connection'
 
 export type User = {
+  _id?: string
   username: string
   password: string
   role: string

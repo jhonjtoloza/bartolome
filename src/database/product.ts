@@ -20,7 +20,7 @@ DB.changes().on('change', () => {
 export const ProductModel = {
   db: getDb<Product>(DB_NAME),
 
-  async insertOne(product: Product) {
+  async insertOrUpdate(product: Product) {
     return DB.put({
       _id: product._id ?? ObjectId(),
       ...product

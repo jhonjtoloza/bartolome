@@ -25,12 +25,12 @@ export function usePagination<T>(config: PaginationConfig<T>) {
   const load = async () => {
     loading.value = true
     const selector = Object.keys(filter.value).length ? filter.value : {}
-    console.log(`selector`, JSON.stringify(selector))
     config.collection
       .find({
         selector,
         skip: (page.value - 1) * rowsPerPage.value,
-        limit: rowsPerPage.value
+        limit: rowsPerPage.value,
+        sort: [{ _id: 'desc' }]
       })
       .then((data) => {
         console.log(`data`, data)

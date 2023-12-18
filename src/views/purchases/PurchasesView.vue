@@ -3,7 +3,7 @@ import AppCard from '@/components/AppCard.vue'
 import { usePagination } from '@/util/pagination'
 import { computed, onMounted, ref } from 'vue'
 import type { Purchase } from '@/database/purchase'
-import { PurchaseCollection } from '@/database/purchase'
+import { PurchaseModel } from '@/database/purchase'
 import AppButton from '@/components/AppButton.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppPagination from '@/components/AppPagination.vue'
@@ -12,7 +12,7 @@ import { dateFormat } from '@/util/date-format'
 
 const { rows, totalPages, page, setPage, load } = usePagination<Purchase>({
   rowsPerPage: ref(20),
-  collection: PurchaseCollection
+  collection: PurchaseModel.db
 })
 
 const fields = [
@@ -24,6 +24,7 @@ const fields = [
 
 const tableValues = computed(() => {
   return rows.value.map((row) => ({
+    _id: row._id,
     date: dateFormat(row.date),
     bought: row.products.map((product) => product.name).join(', '),
     total: currencyFormat(row.total)

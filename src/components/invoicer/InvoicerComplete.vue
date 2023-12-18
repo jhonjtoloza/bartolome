@@ -60,6 +60,14 @@ const cash = ref({
   amount: 0
 })
 
+const discount = computed({
+  get: () => invoice.value?.discount || 0,
+  set: (value) => {
+    invoice.value!.discount = value
+    invoicerStore.updateInvoice(invoice.value!)
+  }
+})
+
 const isCredit = ref(false)
 const applyDiscount = ref(false)
 
@@ -92,26 +100,14 @@ const addCash = (value: number) => {
   cash.value.amount += value
 }
 
-watch(
-  invoice,
-  () => {
-    if (!invoice.value) {
-      return
-    }
-    nextTick(() => {
-      customerSearch.value!.setCustomer(invoice.value!.customer)
-      setCustomer(invoice.value!.customer)
-      cash.value.amount = 0
-    })
-  },
-  { immediate: true }
-)
-
 const isValid = computed(() => {
-  const whenCredit = isCredit.value && cash.value.amount < invoice.value!.total
-  const whenCustomer = Boolean(customer.value) && customer.value._id && customer.value.name !== ''
-  console.log(whenCustomer, whenCredit)
-  return [whenCredit, whenCustomer].every((value) => value)
+  const whenCredit = (isCredit.value && cash.value.amount < invoice.value!.total) || isCredit.value
+  const whenCustomer = Boolean(customer.value._id || customer.value.name !== '')
+  const whenCash =
+    (!isCredit.value && cash.value.amount >= invoice.value!.total - invoice.value!.discount) ||
+    isCredit.value
+  console.log({ whenCredit, whenCustomer, whenCash })
+  return [whenCredit, whenCustomer, whenCash].every((value) => Boolean(value))
 })
 
 const read = ref()
@@ -133,6 +129,33 @@ onMounted(() => {
 watch(customer, () => {
   invoice.value!.customer = customer.value
   invoicerStore.updateInvoice(invoice.value!)
+})
+
+watch(
+  invoice,
+  () => {
+    if (!invoice.value) {
+      return
+    }
+    nextTick(() => {
+      if (!invoice.value?.customer?.name) {
+        return
+      }
+      if (invoice.value.discount > 0) {
+        applyDiscount.value = true
+      }
+      customerSearch.value!.setCustomer(invoice.value!.customer)
+      setCustomer(invoice.value!.customer)
+      cash.value.amount = 0
+    })
+  },
+  { immediate: true }
+)
+
+watch(applyDiscount, () => {
+  if (!applyDiscount.value) {
+    invoice.value!.discount = 0
+  }
 })
 </script>
 
@@ -234,7 +257,7 @@ watch(customer, () => {
             <div class="flex text-right">
               <div class="mr-2">$</div>
               <input
-                v-model.number="invoice.discount"
+                v-model.number="discount"
                 type="text"
                 class="w-28 text-right bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none"
               />
