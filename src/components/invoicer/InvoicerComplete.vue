@@ -101,7 +101,7 @@ const addCash = (value: number) => {
 }
 
 const isValid = computed(() => {
-  const whenCredit = (isCredit.value && cash.value.amount < invoice.value!.total) || isCredit.value
+  const whenCredit = (isCredit.value && cash.value.amount < invoice.value!.total) || !isCredit.value
   const whenCustomer = Boolean(customer.value._id || customer.value.name !== '')
   const whenCash =
     (!isCredit.value && cash.value.amount >= invoice.value!.total - invoice.value!.discount) ||
