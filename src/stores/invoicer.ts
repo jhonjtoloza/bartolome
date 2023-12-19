@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { Invoice, InvoiceProduct } from '@/database/invoice'
 import { InvoiceModel } from '@/database/invoice'
 import type { Product } from '@/database/product'
+import { ProductModel } from '@/database/product'
 
 export const useInvoicerStore = defineStore('invoicer', () => {
   const invoices = ref<Invoice[]>([])
@@ -137,6 +138,16 @@ export const useInvoicerStore = defineStore('invoicer', () => {
     printingInvoice.value = model
   }
 
+  const discountOfStock = async (model: Invoice) => {
+    for (const product of model.products) {
+      const dbProduct = await ProductModel.db.get<Product>(product._id!)
+      dbProduct.stock -= product.quantity
+      await ProductModel.insertOrUpdate(dbProduct).catch((err) => {
+        console.log(err)
+      })
+    }
+  }
+
   return {
     invoices,
     product,
@@ -152,6 +163,7 @@ export const useInvoicerStore = defineStore('invoicer', () => {
     updateInvoice,
     deleteInvoice,
     getNextInvoiceNumber,
-    setPrintingInvoice
+    setPrintingInvoice,
+    discountOfStock
   }
 })

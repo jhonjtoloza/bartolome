@@ -36,9 +36,17 @@ watch(invoice, () => {
         <td class="border-b px-1 py-1">{{ product.name }}</td>
         <td class="border-b px-1 py-1 text-right">{{ currencyFormat(product.price) }}</td>
       </tr>
+      <tr v-if="invoice.discount">
+        <td colspan="2" class="px-1 py-1 text-right">Sub Total</td>
+        <td class="px-1 py-1 text-right">{{ currencyFormat(invoice.total - invoice.discount) }}</td>
+      </tr>
+      <tr v-if="invoice.discount">
+        <td colspan="2" class="px-1 py-1 text-right">Descuento</td>
+        <td class="px-1 py-1 text-right">{{ currencyFormat(invoice.discount) }}</td>
+      </tr>
       <tr>
         <td colspan="2" class="px-1 py-1 text-right">Total</td>
-        <td class="px-1 py-1 text-right">{{ currencyFormat(invoice.total) }}</td>
+        <td class="px-1 py-1 text-right">{{ currencyFormat(invoice.total - invoice.discount) }}</td>
       </tr>
     </table>
   </div>

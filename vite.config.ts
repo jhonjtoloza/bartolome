@@ -12,9 +12,6 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-      },
-      devOptions: {
-        enabled: true
       }
     })
   ],
@@ -24,7 +21,8 @@ export default defineConfig({
     }
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    sourcemap: true
   },
   define: {
     global: 'window'

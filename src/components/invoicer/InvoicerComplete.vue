@@ -38,13 +38,8 @@ const save = async () => {
     : cash.value.amount
   invoice.value.is_done = true
   invoice.value.has_debt = isCredit.value
-  await invoicerStore.updateInvoice(invoice.value!)
-  for (const product of invoice.value.products) {
-    await ProductModel.db.get<Product>(product._id!).then((dbProduct) => {
-      dbProduct.stock -= product.quantity
-      return ProductModel.db.put(dbProduct)
-    })
-  }
+  await invoicerStore.updateInvoice(invoice.value)
+  await invoicerStore.discountOfStock(invoice.value)
   const printInvoice = { ...invoice.value }
   await cashStore.processInvoice(invoice.value!)
   await invoicerStore.loadInvoices()

@@ -21,11 +21,12 @@ const handleSearch = () => {
     options.value = []
     return
   }
+  console.log(`.*[${search.value.toUpperCase()}|${search.value.toLowerCase()}].*`)
   CustomerModel.db
     .find({
       selector: {
         name: {
-          $regex: `.*[${search.value.toUpperCase()}|${search.value.toLowerCase()}].*`
+          $regex: `.*${search.value.toUpperCase()}|${search.value.toLowerCase()}.*`
         }
       }
     })
