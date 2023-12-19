@@ -9,6 +9,13 @@ import IconCashRegister from '@/components/icons/IconCashRegister.vue'
 import AppIcon from '@/components/icons/AppIcon.vue'
 import IconTable from '@/components/icons/IconTable.vue'
 import IconUser from '@/components/icons/IconUser.vue'
+import IconMoney from '@/components/icons/IconMoney.vue'
+import IconClose from '@/components/icons/IconClose.vue'
+
+const logout = () => {
+  localStorage.clear()
+  window.location.href = '/'
+}
 </script>
 
 <template>
@@ -23,6 +30,9 @@ import IconUser from '@/components/icons/IconUser.vue'
         </side-menu>
         <side-menu to="/app/cash">
           <icon-cash-register class="fill-white" />
+        </side-menu>
+        <side-menu to="/app/cash-session">
+          <icon-money class="fill-white" />
         </side-menu>
         <side-menu to="/app/products">
           <icon-product class="fill-white" />
@@ -42,6 +52,15 @@ import IconUser from '@/components/icons/IconUser.vue'
         <side-menu to="/app/users">
           <icon-user class="fill-white" />
         </side-menu>
+        <li>
+          <div class="flex items-center" @click="logout">
+            <span
+              class="flex items-center justify-center h-12 w-12 rounded-2xl hover:bg-blue-400 text-blue-100"
+            >
+              <icon-close class="fill-white" />
+            </span>
+          </div>
+        </li>
       </ul>
     </div>
   </aside>
