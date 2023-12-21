@@ -39,14 +39,14 @@ const save = async () => {
   invoice.value.is_done = true
   invoice.value.has_debt = isCredit.value
   await invoicerStore.updateInvoice(invoice.value)
-  invoicerStore
+  await invoicerStore
     .discountOfStock(invoice.value)
     .catch((error) => {
       console.error(error)
     })
     .then()
   const printInvoice = { ...invoice.value }
-  cashStore
+  await cashStore
     .processInvoice(invoice.value!)
     .then(() => {
       console.log('invoices.processed')
@@ -55,7 +55,7 @@ const save = async () => {
       console.error(error)
     })
 
-  invoicerStore
+  await invoicerStore
     .loadInvoices()
     .then(() => {
       console.log('invoices.loaded')
@@ -121,7 +121,6 @@ const isValid = computed(() => {
   const whenCash =
     (!isCredit.value && cash.value.amount >= invoice.value!.total - invoice.value!.discount) ||
     isCredit.value
-  console.log({ whenCredit, whenCustomer, whenCash })
   return [whenCredit, whenCustomer, whenCash].every((value) => Boolean(value))
 })
 
