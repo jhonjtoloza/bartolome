@@ -1,5 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import AppLayout from '@/layouts/AppLayout.vue'
+import InvoiceView from '@/views/invoices/InvoiceView.vue'
+import InvoicerView from '@/views/invoices/InvoicerView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import InvoicesView from '@/views/invoices/InvoicesView.vue'
+import CustomersView from '@/views/customers/CustomersView.vue'
+import CustomerView from '@/views/customers/CustomerView.vue'
+import PurchasesView from '@/views/purchases/PurchasesView.vue'
+import AddPurchaseView from '@/views/purchases/AddPurchaseView.vue'
+import DetailPurchaseView from '@/views/purchases/DetailPurchaseView.vue'
+import CashRegisterView from '@/views/CashRegisterView.vue'
+import CashSessionsView from '@/views/CashSessionsView.vue'
+import CashSessionView from '@/views/CashSessionView.vue'
+import TablesView from '@/views/TablesView.vue'
+import UsersView from '@/views/UsersView.vue'
+import LoginView from '@/views/LoginView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +29,7 @@ const router = createRouter({
     {
       path: '/app',
       name: 'app',
-      component: () => import('../layouts/AppLayout.vue'),
+      component: AppLayout,
       children: [
         {
           path: '',
@@ -21,7 +38,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin', 'employee']
           },
-          component: () => import('@/views/invoices/InvoicerView.vue')
+          component: () => InvoicerView
         },
         {
           path: 'products',
@@ -30,7 +47,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('../views/ProductsView.vue')
+          component: ProductsView
         },
         {
           path: 'invoices',
@@ -39,7 +56,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/invoices/InvoicesView.vue')
+          component: InvoicesView
         },
         {
           path: 'invoices/:id',
@@ -48,7 +65,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/invoices/InvoiceView.vue')
+          component: InvoiceView
         },
         {
           path: 'customers',
@@ -57,7 +74,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/customers/CustomersView.vue')
+          component: CustomersView
         },
         {
           path: 'customers/:id',
@@ -66,7 +83,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/customers/CustomerView.vue')
+          component: CustomerView
         },
         {
           path: 'purchases',
@@ -75,7 +92,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/purchases/PurchasesView.vue')
+          component: PurchasesView
         },
         {
           path: 'purchases/add',
@@ -84,7 +101,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/purchases/AddPurchaseView.vue')
+          component: () => AddPurchaseView
         },
         {
           path: 'purchases/:id',
@@ -93,7 +110,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/purchases/DetailPurchaseView.vue')
+          component: () => DetailPurchaseView
         },
         {
           path: 'cash',
@@ -102,7 +119,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/CashRegisterView.vue')
+          component: () => CashRegisterView
         },
         {
           path: 'cash-session',
@@ -111,7 +128,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/CashSessionsView.vue')
+          component: () => CashSessionsView
         },
         {
           path: 'cash-session/:id',
@@ -120,7 +137,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/CashSessionView.vue')
+          component: CashSessionView
         },
         {
           path: 'tables',
@@ -129,7 +146,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/TablesView.vue')
+          component: TablesView
         },
         {
           path: 'users',
@@ -138,19 +155,14 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => import('@/views/UsersView.vue')
+          component: UsersView
         }
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue')
+      component: () => LoginView
     }
   ]
 })
