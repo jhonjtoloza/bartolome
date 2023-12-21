@@ -38,7 +38,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin', 'employee']
           },
-          component: () => InvoicerView
+          component: InvoicerView
         },
         {
           path: 'products',
@@ -101,7 +101,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => AddPurchaseView
+          component: AddPurchaseView
         },
         {
           path: 'purchases/:id',
@@ -110,7 +110,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => DetailPurchaseView
+          component: DetailPurchaseView
         },
         {
           path: 'cash',
@@ -119,7 +119,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => CashRegisterView
+          component: CashRegisterView
         },
         {
           path: 'cash-session',
@@ -128,7 +128,7 @@ const router = createRouter({
             requiresAuth: true,
             roles: ['admin']
           },
-          component: () => CashSessionsView
+          component: CashSessionsView
         },
         {
           path: 'cash-session/:id',
@@ -162,7 +162,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => LoginView
+      component: LoginView
     }
   ]
 })
