@@ -9,10 +9,7 @@ export const getDb = <T>(name: string) => {
   const localDB = new PouchDB(name, {
     deterministic_revs: true,
     revs_limit: 100,
-    name: name,
-    fetch: (url, opts) => {
-      return fetch(`${DB_HOST}/${url}`, opts)
-    }
+    name: name
   })
   const remoteDB = new PouchDB(`${DB_HOST}/${name}`)
   localDB
