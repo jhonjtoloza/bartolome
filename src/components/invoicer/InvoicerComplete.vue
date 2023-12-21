@@ -39,10 +39,30 @@ const save = async () => {
   invoice.value.is_done = true
   invoice.value.has_debt = isCredit.value
   await invoicerStore.updateInvoice(invoice.value)
-  await invoicerStore.discountOfStock(invoice.value)
+  invoicerStore
+    .discountOfStock(invoice.value)
+    .catch((error) => {
+      console.error(error)
+    })
+    .then()
   const printInvoice = { ...invoice.value }
-  await cashStore.processInvoice(invoice.value!)
-  await invoicerStore.loadInvoices()
+  cashStore
+    .processInvoice(invoice.value!)
+    .then(() => {
+      console.log('invoices.processed')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+
+  invoicerStore
+    .loadInvoices()
+    .then(() => {
+      console.log('invoices.loaded')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   invoicerStore.setPrintingInvoice(printInvoice)
   invoicerStore.setInvoice(null)
 }

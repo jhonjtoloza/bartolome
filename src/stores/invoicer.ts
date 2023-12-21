@@ -108,8 +108,10 @@ export const useInvoicerStore = defineStore('invoicer', () => {
   }
 
   const updateInvoice = async (model: Invoice) => {
-    const response = await InvoiceModel.insertOrUpdate(model)
-    if (invoice.value && invoice.value?._id! === model._id) {
+    const response = await InvoiceModel.insertOrUpdate(model).catch((e) => {
+      return null
+    })
+    if (response && invoice.value && invoice.value?._id! === model._id) {
       invoice.value = { ...invoice.value, _rev: response.rev }
     }
     await loadInvoices()

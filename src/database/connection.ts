@@ -3,8 +3,8 @@ import PouchDBFind from 'pouchdb-find'
 
 PouchDB.plugin(PouchDBFind)
 
-// const DB_HOST = `http://localhost:5984`
-const DB_HOST = `https://bartolome:BarTolome5984@jhondev.online`
+const DB_HOST = import.meta.env.VITE_DATABASE
+// const DB_HOST = `https://bartolome:BarTolome5984@jhondev.online`
 export const getDb = <T>(name: string) => {
   const localDB = new PouchDB(name, {
     deterministic_revs: true,
